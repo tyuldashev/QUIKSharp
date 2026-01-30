@@ -140,6 +140,21 @@ namespace QuikSharp
         /// </summary>
         /// <param name="startCorrelationId">Стартовое значение.</param>
         void InitializeCorrelationId(int startCorrelationId);
+        
+        /// <summary>
+        /// Функция возвращает количество записей в таблице QUIK.
+        /// </summary>
+        Task<int> GetNumberOf(string tableName);
+
+        /// <summary>
+        /// Функция возвращает строку из таблицы QUIK в виде динамического объекта или словаря.
+        /// </summary>
+        Task<dynamic> GetItem(string tableName, int index);
+        
+        /// <summary>
+        /// Функция возвращает пакет строк из таблицы обезличенных сделок (all_trades).
+        /// </summary>
+        Task<System.Collections.Generic.List<QuikSharp.DataStructures.AllTrade>> GetTradesBatch(int startIndex, int count);
     }
 
     /// <summary>
@@ -267,6 +282,27 @@ namespace QuikSharp
         public void InitializeCorrelationId(int startCorrelationId)
         {
             QuikService.InitializeCorrelationId(startCorrelationId);
+        }
+        
+        public async Task<int> GetNumberOf(string tableName)
+        {
+            var response = await QuikService.Send<Message<int>>(
+                new Message<string>(tableName, "getNumberOf")).ConfigureAwait(false);
+            return response.Data;
+        }
+
+        public async Task<dynamic> GetItem(string tableName, int index)
+        {
+            var response = await QuikService.Send<Message<dynamic>>(
+                new Message<string>(tableName + "|" + index, "getItem")).ConfigureAwait(false);
+            return response.Data;
+        }
+        
+        public async Task<System.Collections.Generic.List<QuikSharp.DataStructures.AllTrade>> GetTradesBatch(int startIndex, int count)
+        {
+            var response = await QuikService.Send<Message<System.Collections.Generic.List<QuikSharp.DataStructures.AllTrade>>>(
+                new Message<string>(startIndex + "|" + count, "get_trades_batch")).ConfigureAwait(false);
+            return response.Data;
         }
     }
 }

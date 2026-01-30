@@ -6,7 +6,7 @@
         <AssemblyOriginatorKeyFile>../../QUIKSharpKey.snk</AssemblyOriginatorKeyFile>
         <SignAssembly>true</SignAssembly>
         <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-        <VersionPrefix>2.0.0</VersionPrefix>
+        <VersionPrefix>2.0.3</VersionPrefix>
         <VersionSuffix></VersionSuffix>
         <VersionSuffix Condition="'$(VersionSuffix)' != '' And '$(BuildNumber)' != ''">$(VersionSuffix)-$(BuildNumber)</VersionSuffix>
         <PackageTags>QUIKSharp</PackageTags>

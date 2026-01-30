@@ -1117,4 +1117,36 @@ function qsfunctions.IsUcpClient(msg)
     return msg
 end
 
+function qsfunctions.getNumberOf(msg)
+    msg.t = timemsec()
+    msg.data = getNumberOf(msg.data)
+    return msg
+end
+
+function qsfunctions.getItem(msg)
+    msg.t = timemsec()
+    local spl = split(msg.data, "|")
+    local table_name, index = spl[1], spl[2]
+    msg.data = getItem(table_name, tonumber(index))
+    return msg
+end
+
+function qsfunctions.get_trades_batch(msg)
+    local spl = split(msg.data, "|")
+    local start_index = tonumber(spl[1])
+    local count = tonumber(spl[2])
+
+    local total = getNumberOf("all_trades")
+    local end_index = math.min(start_index + count - 1, total - 1)
+
+    local trades = {}
+    for i = start_index, end_index do
+        -- getItem("all_trades", i) возвращает таблицу, 
+        -- которая превратится в объект AllTrade в C#
+        table.insert(trades, getItem("all_trades", i))
+    end
+
+    msg.data = trades
+    return msg
+end
 return qsfunctions
